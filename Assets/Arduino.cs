@@ -10,9 +10,10 @@ public class Arduino : MonoBehaviour
     public bool forward, backward, left, right;
     public float deadZone = 0.5f;
     public Rigidbody rb;
-    public float force;
-    public float angular;
+    public float force, angular, animSpeed;
+    
     public GameObject N, F, B, L, R;
+    public GameObject LeftWheel, RightWheel;
 
     public string[] datas;
     void Start()
@@ -24,18 +25,27 @@ public class Arduino : MonoBehaviour
     {
         //StartCoroutine(Direction());
         UI();
+        
 
         if (forward){
             rb.AddForce(rb.transform.forward * force);
+            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.forward);
+            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.forward);
         }
         else if (backward){
             rb.AddForce(rb.transform.forward * -force);
+            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.forward);
+            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.forward);
         }
         else if (right){
             rb.transform.Rotate(new Vector3(0,angular*Time.deltaTime,0));
+            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.forward);
+            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.forward);
         }
         else if (left){
             rb.transform.Rotate(new Vector3(0,-angular*Time.deltaTime,0));
+            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.forward);
+            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.forward);
         }
     }
 
