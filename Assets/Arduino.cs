@@ -9,6 +9,7 @@ public class Arduino : MonoBehaviour
     public float RotX, RotY, RotZ;
     public bool forward, backward, left, right;
     public float deadZone = 0.5f;
+    public float deadZone2 = 0.2f;
     public Rigidbody rb;
     public float force, angular, animSpeed;
     
@@ -29,23 +30,23 @@ public class Arduino : MonoBehaviour
 
         if (forward){
             rb.AddForce(rb.transform.forward * force);
-            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.forward);
-            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.forward);
+            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.right);
+            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.right);
         }
         else if (backward){
             rb.AddForce(rb.transform.forward * -force);
-            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.forward);
-            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.forward);
+            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.right);
+            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.right);
         }
         else if (right){
             rb.transform.Rotate(new Vector3(0,angular*Time.deltaTime,0));
-            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.forward);
-            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.forward);
+            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.right);
+            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.right);
         }
         else if (left){
             rb.transform.Rotate(new Vector3(0,-angular*Time.deltaTime,0));
-            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.forward);
-            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.forward);
+            LeftWheel.transform.Rotate(Time.deltaTime * animSpeed * -transform.right);
+            RightWheel.transform.Rotate(Time.deltaTime * animSpeed * transform.right);
         }
     }
 
@@ -58,12 +59,12 @@ public class Arduino : MonoBehaviour
             else if (RotZ <= -deadZone){
                 backward = true;
             }
-            else if (RotX >= deadZone){
-                left = true;
+            else if (RotX >= deadZone2){
+                right = true;
                 L.SetActive(true);
             }
-            else if (RotX <= -deadZone){
-                right = true;
+            else if (RotX <= -deadZone2){
+                left = true;
             }
         }
 
@@ -78,14 +79,14 @@ public class Arduino : MonoBehaviour
                 backward = false;
             }
         }
-        else if (right){
-            if (RotX >= deadZone){
-                right = false;
+        else if (left){
+            if (RotX >= deadZone2){
+                left = false;
             }
         }
-        else if (left){
-            if (RotX <= -deadZone){
-                left = false;
+        else if (right){
+            if (RotX <= -deadZone2){
+                right = false;
             }
         }
         yield return new WaitForSeconds(1);
